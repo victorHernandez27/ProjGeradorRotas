@@ -29,7 +29,15 @@ namespace ApiEquipe.Servicos
 
         public async Task<Equipe> CreateAsync(Equipe equipe)
         {
-            var retornoPessoa = await BuscaPessoa.GetPessoa(equipe.Pessoa.Nome);
+            var retornoPessoa = new List<Pessoa>();
+
+            foreach (var item in equipe.Pessoa)
+            {
+                Pessoa pessoa = await BuscaPessoa.GetPessoa(item.Nome);
+                retornoPessoa.Add(pessoa);
+            }
+
+
             var retornoCidade = await BuscaCidade.GetCidade(equipe.Cidade.Nome);
 
             equipe.Codigo = equipe.Codigo.ToUpper();
