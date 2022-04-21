@@ -13,7 +13,7 @@ namespace ApiPessoa.Servicos
         {
             var pessoa = new MongoClient(settings.ConnectionString);
             var database = pessoa.GetDatabase(settings.DatabaseName);
-            _pessoa = database.GetCollection<Models.Pessoa>(settings.PessoaCollectionName);
+            _pessoa = database.GetCollection<Pessoa>(settings.PessoaCollectionName);
         }
 
         public List<Pessoa> Get() =>
@@ -28,17 +28,22 @@ namespace ApiPessoa.Servicos
         public Pessoa ChecarPessoa(string nome) =>
             _pessoa.Find(pessoa => pessoa.Nome.ToLower() == nome.ToLower()).FirstOrDefault();
 
-        public Pessoa Create(Models.Pessoa pessoa)
+        public Pessoa Create(Pessoa pessoa)
         {
             _pessoa.InsertOne(pessoa);
             return pessoa;
         }
 
-        public void Update(string id, Pessoa upPessoa) =>
+        public void Update(string id, Pessoa upPessoa)
+        {
+            upPessoa.Id = id;
             _pessoa.ReplaceOne(pessoa => pessoa.Id == id, upPessoa);
+
+        }
 
         public void Remove(string id) =>
             _pessoa.DeleteOne(pessoa => pessoa.Id == id);
+
 
     }
 }

@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Models
+namespace Servicos
 {
-    public class LerExcel
+    internal class LerExcel
     {
         internal class Program
         {

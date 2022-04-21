@@ -7,14 +7,13 @@ using System.Threading.Tasks;
 
 namespace Models
 {
-    public class Equipe
+    public class Usuario
     {
-
         [BsonId]
         [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
         public string Id { get; set; }
-        public string Codigo { get; set; }
-        public List<Pessoa> Pessoa { get; set; }
-        public Cidade Cidade { get; set; }
+        public string NomeUsuario { get; set; }
+        public string NomeCompleto { get; set; }
+        public string Senha { get; set; }
     }
 }

@@ -34,8 +34,11 @@ namespace ApiCidade.Servicos
             return cidade;
         }
 
-        public void Update(string id, Cidade upCidade) =>
+        public void Update(string id, Cidade upCidade)
+        {
+            upCidade.Id = id;
             _cidade.ReplaceOne(cidade => cidade.Id == id, upCidade);
+        }
 
         public void Remove(string id) =>
             _cidade.DeleteOne(cidade => cidade.Id == id);

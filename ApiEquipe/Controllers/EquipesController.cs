@@ -1,4 +1,5 @@
 ﻿using ApiEquipe.Servicos;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace ApiEquipe.Controllers
 {
+    [EnableCors]
     [Route("api/[controller]")]
     [ApiController]
     public class EquipesController : ControllerBase
@@ -36,19 +38,18 @@ namespace ApiEquipe.Controllers
         }
 
         [HttpPut("{id:length(24)}")]
-        public IActionResult PutEquipe(string codigo, Equipe upEquipe)
+        public async Task<IActionResult> PutEquipeAsync(string id, Equipe upEquipe)
         {
-            var equipe = _equipeServicos.Get(codigo);
+            var equipe = _equipeServicos.GetId(id);
 
             if (equipe == null)
             {
                 return NotFound();
             }
 
-            _equipeServicos.Update(codigo.ToUpper(), upEquipe);
+            await _equipeServicos.Update(id, upEquipe);
 
             return NoContent();
-
 
         }
 
