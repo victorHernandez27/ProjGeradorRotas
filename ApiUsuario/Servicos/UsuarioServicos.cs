@@ -19,7 +19,7 @@ namespace ApiUsuario.Servicos
         public List<Usuario> Get() =>
             _usuario.Find(usuario => true).ToList();
 
-        public Usuario Get(string id) =>
+        public Usuario GetId(string id) =>
             _usuario.Find(usuario => usuario.Id == id).FirstOrDefault();
 
         public Usuario GetNome(string nome) =>
@@ -34,12 +34,25 @@ namespace ApiUsuario.Servicos
             return usuario;
         }
 
-        public void Update(string id, Usuario upUsuario) =>
+        public void Update(string id, Usuario upUsuario)
+        {
+            upUsuario.Id = id;
+            var auxiliar = GetId(id);
+
+            if (upUsuario.Senha == null)
+                upUsuario.Senha = auxiliar.Senha;
+
+            if (upUsuario.NomeUsuario == null)
+                upUsuario.NomeUsuario = auxiliar.NomeUsuario;
+
+            if (upUsuario.NomeCompleto == null)
+                upUsuario.NomeCompleto = auxiliar.NomeCompleto;
+
+
             _usuario.ReplaceOne(usuario => usuario.Id == id, upUsuario);
+        }
 
         public void Remove(string id) =>
             _usuario.DeleteOne(usuario => usuario.Id == id);
-
-
     }
 }

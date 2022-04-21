@@ -55,6 +55,7 @@ namespace ApiEquipe.Servicos
 
         public async Task<Equipe> Update(string id, Equipe upEquipe)
         {
+            upEquipe.Id = id;
 
             if (upEquipe.Pessoa != null)
             {
@@ -85,7 +86,6 @@ namespace ApiEquipe.Servicos
             }
 
 
-            upEquipe.Id = id;
 
             _equipe.ReplaceOne(equipe => equipe.Id == id, upEquipe);
 
