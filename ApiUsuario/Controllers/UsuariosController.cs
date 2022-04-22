@@ -1,4 +1,5 @@
 ﻿using ApiUsuario.Servicos;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models;
@@ -6,6 +7,7 @@ using System.Collections.Generic;
 
 namespace ApiUsuario.Controllers
 {
+    [EnableCors]
     [Route("api/[controller]")]
     [ApiController]
     public class UsuariosController : ControllerBase
@@ -25,7 +27,7 @@ namespace ApiUsuario.Controllers
         [HttpGet("{id:length(24)}", Name = "GetUsuario")]
         public ActionResult<Usuario> Get(string id)
         {
-            var usuario = _usuarioServicos.Get(id);
+            var usuario = _usuarioServicos.GetId(id);
 
             if (usuario == null)
             {
@@ -51,7 +53,7 @@ namespace ApiUsuario.Controllers
         [HttpPut("{id:length(24)}")]
         public IActionResult PutUsuario(string id, Usuario upUsuario)
         {
-            var usuario = _usuarioServicos.Get(id);
+            var usuario = _usuarioServicos.GetId(id);
 
             if (usuario == null)
             {
@@ -85,7 +87,7 @@ namespace ApiUsuario.Controllers
         [HttpDelete("{id:length(24)}")]
         public IActionResult DeleteUsuario(string id)
         {
-            var usuario = _usuarioServicos.Get(id);
+            var usuario = _usuarioServicos.GetId(id);
 
             if (usuario == null)
             {

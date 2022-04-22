@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ApiEquipe.Controllers
 {
-    [EnableCors]
+    //[EnableCors]
     [Route("api/[controller]")]
     [ApiController]
     public class EquipesController : ControllerBase
@@ -25,9 +25,9 @@ namespace ApiEquipe.Controllers
             _equipeServicos.Get();
 
         [HttpGet("{id:length(24)}", Name = "GetEquipe")]
-        public ActionResult<Equipe> Get(string id)
+        public ActionResult<Equipe> GetId(string id)
         {
-            var equipe = _equipeServicos.Get(id);
+            var equipe = _equipeServicos.GetId(id);
 
             if (equipe == null)
             {
@@ -36,6 +36,20 @@ namespace ApiEquipe.Controllers
 
             return equipe;
         }
+
+        [HttpGet("Codigo")]
+        public ActionResult<Equipe> GetCodigo(string codigo)
+        {
+            var equipe = _equipeServicos.GetCodigo(codigo);
+
+            if (equipe == null)
+            {
+                return NotFound();
+            }
+
+            return equipe;
+        }
+
 
         [HttpPut("{id:length(24)}")]
         public async Task<IActionResult> PutEquipeAsync(string id, Equipe upEquipe)
@@ -73,7 +87,7 @@ namespace ApiEquipe.Controllers
         [HttpDelete("{id:length(24)}")]
         public IActionResult DeleteEquipe(string id)
         {
-            var equipe = _equipeServicos.Get(id);
+            var equipe = _equipeServicos.GetId(id);
 
             if (equipe == null)
             {

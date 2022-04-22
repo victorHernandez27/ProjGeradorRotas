@@ -17,7 +17,6 @@ namespace ApiEquipe.Servicos
             var database = equipe.GetDatabase(settings.DatabaseName);
             _equipe = database.GetCollection<Equipe>(settings.EquipeCollectionName);
         }
-
         public List<Equipe> Get() =>
             _equipe.Find(equipe => true).ToList();
 
@@ -26,6 +25,9 @@ namespace ApiEquipe.Servicos
 
         public Equipe GetId(string id) =>
            _equipe.Find(equipe => equipe.Id == id).FirstOrDefault();
+
+        public Equipe GetCodigo(string codigo) =>
+           _equipe.Find(equipe => equipe.Codigo.ToUpper() == codigo.ToUpper()).FirstOrDefault();
 
         public Models.Equipe ChecarEquipe(string codigo) =>
             _equipe.Find(equipe => equipe.Codigo.ToUpper() == codigo.ToUpper()).FirstOrDefault();
@@ -42,7 +44,6 @@ namespace ApiEquipe.Servicos
                 retornoPessoa.Add(pessoa);
             }
 
-
             var retornoCidade = await BuscaCidade.BuscarCidadePeloNome(equipe.Cidade.Nome);
 
             equipe.Codigo = equipe.Codigo.ToUpper();
@@ -55,6 +56,7 @@ namespace ApiEquipe.Servicos
 
         public async Task<Equipe> Update(string id, Equipe upEquipe)
         {
+            upEquipe.Id = id;
 
             if (upEquipe.Pessoa != null)
             {
@@ -83,10 +85,6 @@ namespace ApiEquipe.Servicos
             {
                 upEquipe.Codigo = upEquipe.Codigo.ToUpper();
             }
-
-
-            upEquipe.Id = id;
-
             _equipe.ReplaceOne(equipe => equipe.Id == id, upEquipe);
 
             return upEquipe;
