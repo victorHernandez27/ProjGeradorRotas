@@ -1,10 +1,12 @@
-﻿@model Models.Equipe
+﻿@using Models
+@using Servicos
+@model Models.Equipe
 
 @{
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
+<h1>Editar</h1>
 
 <h4>Equipe</h4>
 <hr />
@@ -18,15 +20,39 @@
                 <input asp-for="Codigo" class="form-control" />
                 <span asp-validation-for="Codigo" class="text-danger"></span>
             </div>
+
+
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <label asp-for="Pessoa" class="control-label">Selecione os Colaboradores</label><br/>
+                @foreach (var pessoa in await BuscaPessoa.BuscarTodasPessoas())
+				{
+					<input name="adicionarPessoa" type="checkbox" value=@pessoa.Nome>
+					<label for="@pessoa.Nome"> @pessoa.Nome</label><br />
+				}
+            </div>
+
+
+            <div class="form-group">
+				</> <label asp-for="Cidade" class="control-label">Selecione a Cidade</label><br />
+
+				
+				<select asp-for="Cidade" id="Cidade">
+					@foreach (Cidade cidade in await BuscaCidade.BuscarTodasCidades())
+					{
+						<option value="@cidade.Nome"> @cidade.Nome </option>
+					}
+				</select>
+			</div>
+            
+            <div class="form-group">
+                <input type="submit" value="Salvar Alteração" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Cancelar e Voltar</a>
 </div>
 
 @section Scripts {

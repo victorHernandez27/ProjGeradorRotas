@@ -11,29 +11,8 @@ namespace MVC.Controllers
         // GET: Cidades
         public async Task<IActionResult> Index()
         {
-
-
             return View(await BuscaCidade.BuscarTodasCidades());
-
         }
-
-        // GET: Cidades/Details/5
-        //public async Task<IActionResult> Details(string id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var cidade = await _context.Cidade
-        //        .FirstOrDefaultAsync(m => m.Id == id);
-        //    if (cidade == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return View(cidade);
-        //}
 
         // GET: Cidades/Create
         public IActionResult Create()
@@ -68,9 +47,6 @@ namespace MVC.Controllers
             }
             return View(cidade);
         }
-
-
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]

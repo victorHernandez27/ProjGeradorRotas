@@ -7,6 +7,7 @@ using System.Collections.Generic;
 
 namespace ApiUsuario.Controllers
 {
+    [EnableCors]
     [Route("api/[controller]")]
     [ApiController]
     public class UsuariosController : ControllerBase
