@@ -23,20 +23,17 @@
 			<div class="form-group">
 				</> <label asp-for="Cidade" class="control-label"></label><br />
 
-				<select asp-for="Cidade" id="Cidade">
-					@foreach (Cidade cidade in await BuscaCidade.BuscarTodasCidades())
-					{
-						<option value="@cidade.Nome"> @cidade.Nome </option>
-					}
-				</select>
-			</div>
+				@Html.DropDownListFor(f=> f.Cidade, new SelectList(ViewBag.Cidade, "Id", "Nome"), new {@class = "form-control"})
 
+			</div>
 			<div class="form-group">
 				<label asp-for="Pessoa" class="control-label">Colaboradores Cadastrados:</label><br />
-				@foreach (var pessoa in await BuscaPessoa.BuscarTodasPessoas())
+				@foreach (Pessoa pessoa in ViewBag.Pessoa)
 				{
 					<input name="VerificaPessoaEquipe" type="checkbox" value=@pessoa.Id>
-					<label for="@pessoa.Nome"> @pessoa.Nome</label><br />
+					<label for="@pessoa.Nome"> @pessoa.Nome</label>
+
+					<br />
 				}
 			</div>
 

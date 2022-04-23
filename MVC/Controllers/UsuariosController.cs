@@ -17,6 +17,7 @@ namespace MVC.Controllers
 
         }
 
+        #region cadastrar usuario
         // GET: Usuarios/Create
         public IActionResult Create()
         {
@@ -25,16 +26,30 @@ namespace MVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create([Bind("Id,NomeCompleto, NomeUsuario, Senha")] Usuario usuario)
+        public async Task<IActionResult> Create([Bind("Id,NomeCompleto, NomeUsuario, Senha")] Usuario usuario)
         {
             if (ModelState.IsValid)
             {
-                BuscaUsuario.CadastrarUsuario(usuario);
+
+                var result = await BuscaUsuario.BuscarUsuarioPeloNome(usuario.NomeUsuario);
+
+                if (result == null)
+                {
+                    BuscaUsuario.CadastrarUsuario(usuario);
+                }
+                else
+                {
+                    return Conflict("Usuario ja cadastrada");
+                }
+
                 return RedirectToAction(nameof(Index));
             }
             return View(usuario);
         }
+        #endregion
 
+
+        #region editar usuario
         // GET: Usuarios/Edit/5
         public async Task<IActionResult> Edit(string id)
         {
@@ -64,8 +79,16 @@ namespace MVC.Controllers
             {
                 try
                 {
-                    var retornoUsuario = await BuscaUsuario.BuscarUsuarioPeloId(id);
-                    BuscaUsuario.UpdateUsuario(id, usuario);
+                    var result = await BuscaUsuario.BuscarUsuarioPeloNome(usuario.NomeUsuario);
+
+                    if (result == null)
+                    {
+                        BuscaUsuario.UpdateUsuario(id, usuario);
+                    }
+                    else
+                    {
+                        return Conflict("Usuario ja cadastrada");
+                    }
 
                 }
                 catch (DbUpdateConcurrencyException)
@@ -77,7 +100,10 @@ namespace MVC.Controllers
             }
             return View(usuario);
         }
+        #endregion
 
+
+        #region deletar usuario
         // GET: Usuarios/Delete/5
         public async Task<IActionResult> Delete(string id)
         {
@@ -105,5 +131,6 @@ namespace MVC.Controllers
             BuscaUsuario.RemoverUsuario(id);
             return RedirectToAction(nameof(Index));
         }
+        #endregion
     }
 }

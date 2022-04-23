@@ -14,6 +14,7 @@ namespace Servicos
     {
         static readonly HttpClient client = new HttpClient();
 
+
         public static async Task<Equipe> BuscarEquipePeloCodigo(string Codigo)
         {
             try
@@ -28,7 +29,7 @@ namespace Servicos
             }
             catch (HttpRequestException)
             {
-                throw;
+                return null;
             }
         }
 
@@ -49,6 +50,8 @@ namespace Servicos
                 throw;
             }
         }
+
+
 
         public static async Task<Equipe> BuscarEquipePeloId(string Id)
         {

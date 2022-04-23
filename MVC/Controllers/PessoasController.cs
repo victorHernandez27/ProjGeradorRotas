@@ -16,7 +16,7 @@ namespace MVC.Controllers
             return View(await BuscaPessoa.BuscarTodasPessoas());
 
         }
-
+        #region cadastrar pessoa
         // GET: Pessoas/Create
         public IActionResult Create()
         {
@@ -25,16 +25,28 @@ namespace MVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create([Bind("Id,Nome")] Pessoa pessoa)
+        public async Task<IActionResult> Create([Bind("Id,Nome")] Pessoa pessoa)
         {
             if (ModelState.IsValid)
             {
-                BuscaPessoa.CadastrarPessoa(pessoa);
+                var result = await BuscaPessoa.BuscarPessoaPeloNome(pessoa.Nome);
+
+                if (result == null)
+                {
+                    BuscaPessoa.CadastrarPessoa(pessoa);
+                }
+                else
+                {
+                    return Conflict("Pessoa ja cadastrada");
+                }
                 return RedirectToAction(nameof(Index));
             }
             return View(pessoa);
         }
+        #endregion
 
+
+        #region editar pessoa
         // GET: Pessoas/Edit/5
         public async Task<IActionResult> Edit(string id)
         {
@@ -51,9 +63,6 @@ namespace MVC.Controllers
             return View(pessoa);
         }
 
-
-
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string id, [Bind("Id,Nome")] Pessoa pessoa)
@@ -67,9 +76,15 @@ namespace MVC.Controllers
             {
                 try
                 {
-                    var retornoPessoa = await BuscaPessoa.BuscarPessoaPeloId(id);
-                    BuscaPessoa.UpdatePessoa(id, pessoa);
-
+                    var result = await BuscaPessoa.BuscarPessoaPeloNome(pessoa.Nome);
+                    if (result == null)
+                    {
+                        BuscaPessoa.UpdatePessoa(id, pessoa);
+                    }
+                    else
+                    {
+                        return Conflict("Pessoa ja está cadastrada, tente outro nome.");
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -80,7 +95,10 @@ namespace MVC.Controllers
             }
             return View(pessoa);
         }
+        #endregion
 
+
+        #region deletar pessoa
         // GET: Pessoas/Delete/5
         public async Task<IActionResult> Delete(string id)
         {
@@ -108,5 +126,6 @@ namespace MVC.Controllers
             BuscaPessoa.RemoverPessoa(id);
             return RedirectToAction(nameof(Index));
         }
+        #endregion
     }
 }

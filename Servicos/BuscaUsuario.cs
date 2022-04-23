@@ -29,7 +29,7 @@ namespace Servicos
             }
             catch (HttpRequestException)
             {
-                throw;
+                return null;
             }
         }
 
