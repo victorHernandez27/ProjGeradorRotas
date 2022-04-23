@@ -18,23 +18,18 @@
             <th>
                 @Html.DisplayNameFor(model => model.NomeCompleto)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Senha)
-            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var item in Model.OrderBy(i => i.NomeUsuario))
+{
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.NomeUsuario)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.NomeCompleto)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Senha)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Editar</a> |

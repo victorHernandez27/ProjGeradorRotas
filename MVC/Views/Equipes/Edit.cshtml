@@ -3,58 +3,48 @@
 @model Models.Equipe
 
 @{
-    ViewData["Title"] = "Edit";
+	ViewData["Title"] = "Edit";
 }
 
 <h1>Editar</h1>
 
-<h4>Equipe</h4>
+<h4>Equipe: @Html.DisplayFor(model => model.Codigo)</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="Codigo" class="control-label"></label>
-                <input asp-for="Codigo" class="form-control" />
-                <span asp-validation-for="Codigo" class="text-danger"></span>
-            </div>
+	<div class="col-md-4">
+		<form asp-action="Edit">
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+			<input type="hidden" asp-for="Id" />
 
-
-            <div class="form-group">
-                <label asp-for="Pessoa" class="control-label">Selecione os Colaboradores</label><br/>
-                @foreach (var pessoa in await BuscaPessoa.BuscarTodasPessoas())
-				{
-					<input name="adicionarPessoa" type="checkbox" value=@pessoa.Nome>
-					<label for="@pessoa.Nome"> @pessoa.Nome</label><br />
-				}
-            </div>
-
-
-            <div class="form-group">
-				</> <label asp-for="Cidade" class="control-label">Selecione a Cidade</label><br />
-
-				
-				<select asp-for="Cidade" id="Cidade">
-					@foreach (Cidade cidade in await BuscaCidade.BuscarTodasCidades())
-					{
-						<option value="@cidade.Nome"> @cidade.Nome </option>
-					}
-				</select>
+			<div class="form-group">
+				</> <label asp-for="Cidade" class="control-label">Selecionar nova cidade</label><br />
+				@Html.DropDownListFor(f=> f.Cidade, new SelectList(ViewBag.Cidade, "Id", "Nome"), new {@class = "form-control"})
 			</div>
-            
-            <div class="form-group">
-                <input type="submit" value="Salvar Alteração" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
+
+			<div class="form-group">
+				<label asp-for="Pessoa" class="control-label">Selecionar Pessoas da Equipe</label><br />
+				@foreach (var pessoa in ViewBag.Pessoa)
+				{
+					<input name="AtualizarPessoa" type="checkbox" value=@pessoa.Id>
+					<label for="@pessoa.Nome"> @pessoa.Nome</label>
+
+					<br />
+				}
+			</div>
+
+			<div class="form-group">
+				<input type="submit" value="Salvar Alteração" class="btn btn-primary" />
+			</div>
+		</form>
+	</div>
 </div>
 
 <div>
-    <a asp-action="Index">Cancelar e Voltar</a>
+	<a asp-action="Index">Cancelar e Voltar</a>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+	await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
 }
