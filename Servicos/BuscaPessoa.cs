@@ -10,8 +10,6 @@ namespace Servicos
     public class BuscaPessoa
     {
         static readonly HttpClient client = new HttpClient();
-
-
         public static async Task<Pessoa> BuscarPessoaPeloNome(string Nome)
         {
             try
@@ -21,10 +19,7 @@ namespace Servicos
                 string corpoResposta = await respostaAPI.Content.ReadAsStringAsync();
                 var pessoa = JsonConvert.DeserializeObject<Pessoa>(corpoResposta);
 
-
                 return pessoa;
-
-
             }
             catch (HttpRequestException)
             {

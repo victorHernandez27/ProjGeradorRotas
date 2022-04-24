@@ -1,32 +1,55 @@
-﻿@model Models.Pessoa
+﻿@using Models
+@using Servicos
+@model Models.Equipe
 
 @{
-    ViewData["Title"] = "Create";
+	ViewData["Title"] = "Create";
 }
 
-<h2>Nova Pessoa</h2>
+<h1>Criar Nova Equipe</h1>
 
 <hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Nome" class="control-label"></label>
-                <input asp-for="Nome" class="form-control" />
-                <span asp-validation-for="Nome" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Adicionar" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
+	<div class="col-md-4">
+		<form asp-action="Create">
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+			<div class="form-group">
+				<label asp-for="Codigo" class="control-label"></label>
+				<input asp-for="Codigo" class="form-control" placeholder="Codigo Equipe" />
+				<span asp-validation-for="Codigo" class="text-danger"></span>
+			</div>
+			
+			<div class="form-group">
+				</> <label asp-for="Cidade" class="control-label"></label><br />
+
+				@Html.DropDownListFor(f=> f.Cidade, new SelectList(ViewBag.Cidade, "Id", "Nome"), new {@class = "form-control"})
+
+			</div>
+			
+			<div class="form-group">
+				<label asp-for="Pessoa" class="control-label">Colaboradores Disponíveis:</label><br />
+				@foreach (Pessoa pessoa in ViewBag.Pessoa)
+				{
+					<input name="VerificaPessoaEquipe" type="checkbox" value=@pessoa.Id>
+					<label for="@pessoa.Nome"> @pessoa.Nome</label>
+					<br />
+				}
+			</div>
+
+			<div class="form-group">
+				<input type="submit" value="Adicionar" class="btn btn-primary" />
+			</div>
+		</form>
+	</div>
 </div>
 
 <div>
-    <a asp-action="Index">Cancelar e Voltar</a>
+	<a asp-action="Index">Cancelar e Voltar</a>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+	await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
 }
