@@ -1,8 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Models;
 using Servicos;
-using System.Threading.Tasks;
 
 namespace MVC.Controllers
 {
@@ -74,29 +73,22 @@ namespace MVC.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    var result = await BuscaPessoa.BuscarPessoaPeloNome(pessoa.Nome);
-                    if (result == null)
-                    {
-                        BuscaPessoa.UpdatePessoa(id, pessoa);
-                    }
-                    else
-                    {
-                        return Conflict("Pessoa ja está cadastrada, tente outro nome.");
-                    }
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    throw;
 
+                var result = await BuscaPessoa.BuscarPessoaPeloNome(pessoa.Nome);
+                if (result == null)
+                {
+                    BuscaPessoa.UpdatePessoa(id, pessoa);
                 }
+                else
+                {
+                    return Conflict("Pessoa ja está cadastrada, tente outro nome.");
+                }
+
                 return RedirectToAction(nameof(Index));
             }
             return View(pessoa);
         }
         #endregion
-
 
         #region deletar pessoa
         // GET: Pessoas/Delete/5

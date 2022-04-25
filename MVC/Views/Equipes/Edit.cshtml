@@ -3,7 +3,7 @@
 @model Models.Equipe
 
 @{
-	ViewData["Title"] = "Edit";
+	ViewData["Title"] = "Editar Equipe";
 }
 
 <h1>Editar</h1>
@@ -17,12 +17,12 @@
 			<input type="hidden" asp-for="Id" />
 
 			<div class="form-group">
-				</> <label asp-for="Cidade" class="control-label">Selecionar nova cidade</label><br />
+				</> <label asp-for="Cidade" class="control-label">Selecione uma nova cidade</label><br />
 				@Html.DropDownListFor(f=> f.Cidade, new SelectList(ViewBag.Cidade, "Id", "Nome"), new {@class = "form-control"})
 			</div>
 
 			<div class="form-group">
-				<label asp-for="Pessoa" class="control-label">Selecionar Pessoas da Equipe</label><br />
+				<label asp-for="Pessoa" class="control-label">Selecione os Colaboradores da Equipe</label><br />
 				@foreach (var pessoa in ViewBag.Pessoa)
 				{
 					<input name="AtualizarPessoa" type="checkbox" value=@pessoa.Id>

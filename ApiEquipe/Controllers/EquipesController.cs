@@ -37,6 +37,18 @@ namespace ApiEquipe.Controllers
             return equipe;
         }
 
+        [HttpGet("Cidade")]
+        public ActionResult<List<Equipe>> GetEquipePelaCidade(string id)
+        {
+            var equipe = _equipeServicos.GetEquipePelaCidade(id);
+
+            if (equipe == null)
+            {
+                return NotFound();
+            }
+
+            return equipe;
+        }
         [HttpGet("Codigo")]
         public ActionResult<Equipe> GetCodigo(string codigo)
         {

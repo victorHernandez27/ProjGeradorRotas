@@ -20,6 +20,9 @@ namespace ApiEquipe.Servicos
         public List<Equipe> Get() =>
             _equipe.Find(equipe => true).ToList();
 
+        public List<Equipe> GetEquipePelaCidade(string Id) =>
+            _equipe.Find(equipe => equipe.Cidade.Id == Id).ToList();
+
         public Equipe Get(string codigo) =>
             _equipe.Find(equipe => equipe.Codigo.ToUpper() == codigo.ToUpper()).FirstOrDefault();
 

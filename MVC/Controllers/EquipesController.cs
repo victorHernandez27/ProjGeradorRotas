@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Models;
-using Servicos;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Models;
+using Servicos;
 
 namespace MVC.Controllers
 {
@@ -18,13 +18,13 @@ namespace MVC.Controllers
         #region Criar nova equipe
         // GET: Equipes/Create
         public async Task<IActionResult> Create()
-        {           
+        {
             var retornoCidade = await BuscaCidade.BuscarTodasCidades();
             List<Cidade> cidade = new List<Cidade>();
             cidade.AddRange(retornoCidade);
             var ordenarCidade = from c in cidade orderby c.Nome select new { c.Nome, c.Id };
             ViewBag.Cidade = ordenarCidade;
-           
+
             var retornoPessoa = await BuscaPessoa.BuscarTodasPessoas();
             List<Pessoa> pessoa = new List<Pessoa>();
 
@@ -33,7 +33,7 @@ namespace MVC.Controllers
                 if (retornoPessoa[i].Disponivel == true)
                     pessoa.Add(retornoPessoa[i]);
             }
-            
+
             List<Pessoa> ordenarPessoa = pessoa.OrderBy(p => p.Nome).ToList();
             ViewBag.Pessoa = ordenarPessoa;
 
@@ -44,12 +44,12 @@ namespace MVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Codigo,Cidade")] Equipe equipe)
         {
+
             List<Pessoa> listaPessoa = new List<Pessoa>();
 
-            var cidade = Request.Form["Cidade"].ToString();
+            var cidade = Request.Form["Cidade"].ToString(); 
             var buscaCidade = await BuscaCidade.BuscarCidadePeloId(cidade); 
             var pessoa = Request.Form["VerificaPessoaEquipe"].ToList();
-            
 
             if (ModelState.IsValid)
             {
@@ -60,13 +60,10 @@ namespace MVC.Controllers
                     BuscaPessoa.UpdatePessoa(pessoa[i], listaPessoa[i]);
                 }
 
-                var result = await BuscaEquipe.BuscarEquipePeloCodigo(equipe.Codigo); //verifica se a equipe está cadastrada.
+                var result = await BuscaEquipe.BuscarEquipePeloCodigo(equipe.Codigo); 
 
                 if (result == null)
                 {
-                    //for (int i = 0; i < listaPessoa.Count; i++)
-                    //    listaPessoa[i].Disponivel = false;
-
                     equipe.Pessoa = listaPessoa;
                     equipe.Cidade = buscaCidade;
 
@@ -82,7 +79,6 @@ namespace MVC.Controllers
             return View(equipe);
         }
         #endregion
-
 
         #region Editar equipe
         // GET: Equipes/Edit/5
@@ -124,7 +120,6 @@ namespace MVC.Controllers
             List<Pessoa> ordenarPessoa = pessoa.OrderBy(p => p.Nome).ToList();
             ViewBag.Pessoa = ordenarPessoa;
 
-
             if (equipe == null)
             {
                 return NotFound();
@@ -144,21 +139,16 @@ namespace MVC.Controllers
 
             if (ModelState.IsValid)
             {
-
                 List<Pessoa> listaPessoa = new List<Pessoa>();
                 var buscaEquipe = await BuscaEquipe.BuscarEquipePeloId(id);
                 var buscaCidade = await BuscaCidade.BuscarCidadePeloId(Request.Form["Cidade"].ToString());
                 var pessoaUp = Request.Form["AtualizarPessoa"].ToList();
-
-
 
                 for (int i = 0; i < buscaEquipe.Pessoa.Count; i++) 
                 {
                     buscaEquipe.Pessoa[i].Disponivel = true;
                     BuscaPessoa.UpdatePessoa(buscaEquipe.Pessoa[i].Id, buscaEquipe.Pessoa[i]);
                 }
-
-
 
                 if (pessoaUp.Count > 0)
                 {
@@ -183,7 +173,6 @@ namespace MVC.Controllers
             return View(equipe);
         }
         #endregion
-
 
         #region Deletar equipe
         // GET: Equipes/Delete/5
@@ -219,8 +208,6 @@ namespace MVC.Controllers
             return RedirectToAction(nameof(Index));
         }
         #endregion
-
-
 
         #region Detalhes da equipe
 
