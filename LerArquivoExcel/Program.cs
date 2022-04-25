@@ -4,7 +4,6 @@ using System;
 using System.Data;
 using System.IO;
 using System.Linq;
-
 using System.Text;
 
 namespace LerArquivoExcel
@@ -17,7 +16,6 @@ namespace LerArquivoExcel
             var saida = new StreamWriter(@"Dados\Documentos\word.docx"); 
 
             DataTable tabela = new DataTable(); 
-
 
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial; 
 
@@ -62,7 +60,7 @@ namespace LerArquivoExcel
 
                 StringBuilder sbArquivo = new StringBuilder(); 
 
-                for (int i = 0; i < tabela.Rows.Count; i++)
+                for (int i = 0; i < tabela.Rows.Count; i++) 
                 {
                     var j = 0;
                     foreach (var item in matriz) 
@@ -74,7 +72,6 @@ namespace LerArquivoExcel
                         }
                         else
                             break;
-
                     }
                 }
                 saida.WriteLine(sbArquivo); 

@@ -1,0 +1,53 @@
+﻿@model string[]
+
+@{
+	ViewData["Title"] = "Opcoes";
+	int i = 0;
+}
+
+<h2>Opções</h2>
+
+<p>
+	@Html.ActionLink("Voltar", "Filtros", "Documento")
+</p>
+
+<div class="row">
+	<div class="col-md-4">
+		<form asp-action="Create">
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+			<div class="form-group">
+				<label class="control-label"> Equipes Disponíveis:</label><br />
+
+				@foreach (var equipe in ViewBag.Equipes)
+				{
+					<input name="equipe" type="checkbox" value=@equipe.Id id="equipe"/>
+
+					<label for="@equipe.Codigo"> @equipe.Codigo</label>
+
+					<br />
+				}
+
+			</div>
+
+			<div class="form-group">
+				<label class="control-label">Selecione os dados: </label><br />
+
+				@foreach (var item in ViewBag.Cabecalho)
+				{
+					<input name="cabecalho" type="checkbox" value=@i id="cabecalho"/>
+
+					<label for="@item.ToString()"> @item.ToString()</label>
+
+					<br />
+
+					i++;
+				}
+			</div>
+
+			<div class="form-group">
+				<input type="submit" value="Gerar Documento" class="btn btn-primary" onclick="GerarDocumento()"/>
+			</div>
+		</form>
+	</div>
+</div>

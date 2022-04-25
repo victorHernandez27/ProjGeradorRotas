@@ -1,8 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Models;
 using Servicos;
-using System.Threading.Tasks;
 
 namespace MVC.Controllers
 {
@@ -73,25 +72,18 @@ namespace MVC.Controllers
 
             if (ModelState.IsValid)
             {
-                try
+
+                var result = await BuscaCidade.BuscarCidadePeloNome(cidade.Nome);
+
+                if (result == null)
                 {
-                    var result = await BuscaCidade.BuscarCidadePeloNome(cidade.Nome);
-
-                    if (result == null)
-                    {
-                        BuscaCidade.UpdateCidade(id, cidade);
-                    }
-                    else
-                    {
-                        return Conflict("Cidade ja cadastrada");
-                    }
-
+                    BuscaCidade.UpdateCidade(id, cidade);
                 }
-                catch (DbUpdateConcurrencyException)
+                else
                 {
-                    throw;
-
+                    return Conflict("Cidade ja cadastrada");
                 }
+
                 return RedirectToAction(nameof(Index));
             }
             return View(cidade);

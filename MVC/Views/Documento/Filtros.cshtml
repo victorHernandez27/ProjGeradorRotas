@@ -1,0 +1,46 @@
+﻿@model string[]
+
+@{
+	ViewData["Title"] = "Filtos";
+}
+
+
+<div class="row">
+	<div class="col-md-4">
+		<form asp-action="BuscarEquipePelaCidadeAtual">
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+			<div class="form-group">
+				<label class="control-label">Tipos de Serviços:</label><br />
+				<select asp-items="@(new SelectList(ViewBag.Servicos, @ViewBag.Servicos))" class="form-control" name="nomeDoServico" id="nomeDoServico" onchange="buscarServico()">
+					<option value="default">Selecione Serviço</option>
+				</select>
+			</div>
+
+			<div class="form-group" id="citiesList" style="display:none;">
+				<label class="control-label">Cidade de Atuação:</label><br />
+				<select asp-items="@(new SelectList(ViewBag.Cidades,"Id", "Nome"))" class="form-control" name="Filtros" id="Filtros" onchange="buscarCidadeAtual()">
+					<option value="default">Selecione Cidade</option>
+				</select>
+			</div>
+					
+			<div class="form-group">
+				<input type="submit" value="Próximo" class="btn btn-primary" id="btnNext" disabled/>
+			</div>
+		</form>
+	</div>
+</div>
+
+
+<script type="text/javascript">
+	buscarServico = () => {
+		let serviceSelected = document.querySelector('#nomeDoServico').value;
+		if(serviceSelected != "default")
+			document.querySelector("#citiesList").style.display = "block";
+	}
+	buscarCidadeAtual = () => {
+		let cidadeSelecionada = document.querySelector('#Filtros').value;
+		if(cidadeSelecionada != "default")
+			document.querySelector("#btnNext").disabled = false;
+		}
+</script>

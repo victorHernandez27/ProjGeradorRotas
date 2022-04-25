@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Models;
 using Servicos;
 
@@ -48,7 +47,6 @@ namespace MVC.Controllers
         }
         #endregion
 
-
         #region editar usuario
         // GET: Usuarios/Edit/5
         public async Task<IActionResult> Edit(string id)
@@ -77,31 +75,24 @@ namespace MVC.Controllers
 
             if (ModelState.IsValid)
             {
-                try
+
+                var result = await BuscaUsuario.BuscarUsuarioPeloNome(usuario.NomeUsuario);
+
+                if (result == null)
                 {
-                    var result = await BuscaUsuario.BuscarUsuarioPeloNome(usuario.NomeUsuario);
-
-                    if (result == null)
-                    {
-                        BuscaUsuario.UpdateUsuario(id, usuario);
-                    }
-                    else
-                    {
-                        return Conflict("Usuario ja cadastrada");
-                    }
-
+                    BuscaUsuario.UpdateUsuario(id, usuario);
                 }
-                catch (DbUpdateConcurrencyException)
+                else
                 {
-                    throw;
-
+                    return Conflict("Usuario ja cadastrada");
                 }
+
+
                 return RedirectToAction(nameof(Index));
             }
             return View(usuario);
         }
         #endregion
-
 
         #region deletar usuario
         // GET: Usuarios/Delete/5
