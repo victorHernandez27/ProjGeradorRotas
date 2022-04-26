@@ -12,6 +12,7 @@ namespace Models
         public static List<List<string>> rotaSelecionada = new();
         public static async Task Write(List<List<string>> rotas, List<string> cabecalhoSelecionado, List<Equipe> equipesSelecionadas, string nomeDoServico, Cidade cidadeSelecionada, string rootPath)
         {
+
             var indexCep = 0;
             var indexContrato = 0;
             var indexAssinante = 0;
@@ -22,7 +23,7 @@ namespace Models
             var indexComplemento = 0;
             var indexBairro = 0;
             var indexCidade = 0;
-            
+
             for (int i = 1; i < rotas[0].Count; i++)
             {
                 var aux = rotas[0][i].ToString().ToUpper();
@@ -48,7 +49,7 @@ namespace Models
                 if (aux == "CIDADE")
                     indexCidade = i;
             }
-            
+
             rotaSelecionada = new();
             for (int linha = 0; linha < rotas.Count; linha++)
             {
@@ -59,13 +60,17 @@ namespace Models
                     rotaSelecionada.Add(rotas[linha]);
             }
 
-            int k = 0;
+            var linhaRota = 0;
+            var fim = 0;
+            if (rotaSelecionada.Count < 5)
+                fim = rotaSelecionada.Count;
+            else
+                fim = 5;
 
             Document word = new Document();
 
             for (int j = 0; j < equipesSelecionadas.Count; j++)
             {
-
                 DocumentBuilder builder = new DocumentBuilder(word);
 
                 Font font = builder.Font;
@@ -81,19 +86,19 @@ namespace Models
                 builder.Writeln($"Cidade: {cidadeSelecionada.Nome}");
                 builder.Writeln($"Tipo de Serviço: {nomeDoServico}\n");
 
-                for (k = 0; k < 5; k++)
+                do
                 {
-                    var enderecoCompleto = $"{rotaSelecionada[k][indexEndereco]}, Numero {rotaSelecionada[k][indexNumero]} {rotaSelecionada[k][indexComplemento]} - {rotaSelecionada[k][indexBairro]}";
+                    var enderecoCompleto = $"{rotaSelecionada[linhaRota][indexEndereco]}, Numero {rotaSelecionada[linhaRota][indexNumero]} {rotaSelecionada[linhaRota][indexComplemento]} - {rotaSelecionada[linhaRota][indexBairro]}";
                     font.Bold = true;
                     font.Underline = Underline.Single;
                     font.Size = 9;
                     builder.Write("Contrato:");
                     font.Bold = false;
-                    builder.Write(rotaSelecionada[k][indexContrato]);
+                    builder.Write(rotaSelecionada[linhaRota][indexContrato]);
                     font.Bold = true;
                     builder.Write(" - Assinante:");
                     font.Bold = false;
-                    builder.Writeln(rotaSelecionada[k][indexAssinante]);
+                    builder.Writeln(rotaSelecionada[linhaRota][indexAssinante]);
 
                     font.Underline = Underline.None;
                     font.Bold = true;
@@ -104,18 +109,22 @@ namespace Models
                     font.Bold = true;
                     builder.Write("CEP: ");
                     font.Bold = false;
-                    builder.Writeln(rotaSelecionada[k][indexCep]);
+                    builder.Writeln(rotaSelecionada[linhaRota][indexCep]);
 
                     font.Bold = true;
                     builder.Write("O.S.: ");
                     font.Bold = false;
-                    builder.Writeln(rotaSelecionada[k][indexOS]);
+                    builder.Writeln(rotaSelecionada[linhaRota][indexOS]);
 
                     builder.Writeln("\n");
+                    linhaRota++;
+                } while (linhaRota < fim);
 
-                }
+                word.Save($"Rotas {cidadeSelecionada.Nome}.docx");
+                if (linhaRota <= 3)
+                
+                    break;
             }
-            word.Save($"Rotas {cidadeSelecionada.Nome}.docx");
         }
     }
 }
