@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models;
@@ -14,11 +15,18 @@ namespace MVC.Controllers
 {
     public class DocumentoController : Controller
     {
+        private static IWebHostEnvironment _hostEnvironment;
         public static List<List<string>> rotas = new();
         public static List<string> cabecalho = new();
         public static List<string> servicos = new();
         public static string nomeDoServico;
         public static string cidade;
+        public static string downloadDocumento;
+
+        public DocumentoController(IWebHostEnvironment hostEnvironment)
+        {
+            _hostEnvironment = hostEnvironment;
+        }
 
         public IActionResult Upload()
         {
@@ -43,11 +51,13 @@ namespace MVC.Controllers
                 int colunaDoCep = 0;
                 int colunaDoServico = 0;
 
-                for (var coluna = 1; coluna < colunaCount; coluna++)
+                for (var coluna = 1; coluna <= colunaCount; coluna++)
                 {
                     var aux = planilha.Cells[1, coluna].Value.ToString(); 
 
-                    cabecalhoDoArquivo.Add(aux); 
+
+
+                    cabecalhoDoArquivo.Add(aux);
 
                     if (aux.ToUpper() == "CEP")
                         colunaDoCep = coluna - 1; 
@@ -68,8 +78,9 @@ namespace MVC.Controllers
                 for (var linha = 1; linha < linhaCount; linha++)
                 {
                     List<string> conteudoDaLinha = new();
+                    conteudoDaLinha.Add(" ");
 
-                    for (var column = 1; column < colunaCount; column++)
+                    for (var column = 1; column <= colunaCount; column++)
                     {
                         servico.Add(planilha.Cells[linha, colunaDoServico].Value.ToString().ToUpper());
 
@@ -116,7 +127,6 @@ namespace MVC.Controllers
 
             ViewBag.Cabecalho = cabecalho;
             ViewBag.Equipes = equipe;
-
             return View();
         }
 
@@ -138,10 +148,18 @@ namespace MVC.Controllers
 
             var cidadeSelecionada = await BuscaCidade.BuscarCidadePeloId(cidade);
 
-            await ExportarDocumento.Write(rotas, cabecalhoSelecionado, equipesSelecionadas, nomeDoServico, cidadeSelecionada);
+            await ExportarDocumento.Write(rotas, cabecalhoSelecionado, equipesSelecionadas, nomeDoServico, cidadeSelecionada, _hostEnvironment.WebRootPath);
+            var nomeDoArquivo = $"Rotas {cidadeSelecionada.Nome}.docx";
+            downloadDocumento = $"{_hostEnvironment.ContentRootPath}//{nomeDoArquivo}";
 
             return View();
         }
 
+        public FileResult Download()
+        {
+            var nomeDoArquivo = downloadDocumento.Split("//").ToList();
+            var arquivoGerado = System.IO.File.ReadAllBytes(downloadDocumento);
+            return File(arquivoGerado, "application/octet-stream", nomeDoArquivo.Last().ToString());
+        }
     }
 }

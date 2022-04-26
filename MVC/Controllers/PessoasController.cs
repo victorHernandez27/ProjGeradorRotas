@@ -10,10 +10,7 @@ namespace MVC.Controllers
         // GET: Pessoas
         public async Task<IActionResult> Index()
         {
-
-
             return View(await BuscaPessoa.BuscarTodasPessoas());
-
         }
         #region cadastrar pessoa
         // GET: Pessoas/Create
@@ -32,6 +29,7 @@ namespace MVC.Controllers
 
                 if (result == null)
                 {
+                    pessoa.Disponivel = true;
                     BuscaPessoa.CadastrarPessoa(pessoa);
                 }
                 else
@@ -43,7 +41,6 @@ namespace MVC.Controllers
             return View(pessoa);
         }
         #endregion
-
 
         #region editar pessoa
         // GET: Pessoas/Edit/5

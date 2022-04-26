@@ -7,12 +7,11 @@ using System.Threading.Tasks;
 
 namespace Models
 {
-   public class ExportarDocumento
+    public class ExportarDocumento
     {
         public static List<List<string>> rotaSelecionada = new();
-        public static async Task Write(List<List<string>> rotas, List<string> cabecalhoSelecionado, List<Equipe> equipesSelecionadas, string nomeDoServico, Cidade cidadeSelecionada)
+        public static async Task Write(List<List<string>> rotas, List<string> cabecalhoSelecionado, List<Equipe> equipesSelecionadas, string nomeDoServico, Cidade cidadeSelecionada, string rootPath)
         {
-
             var indexCep = 0;
             var indexContrato = 0;
             var indexAssinante = 0;
@@ -23,8 +22,8 @@ namespace Models
             var indexComplemento = 0;
             var indexBairro = 0;
             var indexCidade = 0;
-
-            for (int i = 0; i < rotas[0].Count; i++)
+            
+            for (int i = 1; i < rotas[0].Count; i++)
             {
                 var aux = rotas[0][i].ToString().ToUpper();
 
@@ -49,7 +48,7 @@ namespace Models
                 if (aux == "CIDADE")
                     indexCidade = i;
             }
-
+            
             rotaSelecionada = new();
             for (int linha = 0; linha < rotas.Count; linha++)
             {
@@ -61,10 +60,12 @@ namespace Models
             }
 
             int k = 0;
+
+            Document word = new Document();
+
             for (int j = 0; j < equipesSelecionadas.Count; j++)
             {
 
-                Document word = new Document();
                 DocumentBuilder builder = new DocumentBuilder(word);
 
                 Font font = builder.Font;
@@ -73,29 +74,48 @@ namespace Models
                 font.Color = System.Drawing.Color.Black;
                 font.Name = "Segoe UI";
                 builder.ParagraphFormat.Alignment = ParagraphAlignment.Center;
-                builder.Writeln("ROTA DE TRABALHO - " + DateTime.Now.ToString("dd/MM/yyyy") + "\n\n");
+                builder.Writeln("ROTA DE TRABALHO - " + DateTime.Now.ToString("dd/MM/yyyy") + "\n");
                 builder.ParagraphFormat.Alignment = ParagraphAlignment.Left;
                 font.Size = 11;
-                builder.Writeln($"Nome da Equipe: {equipesSelecionadas[j].Codigo}  \n");
-                builder.Writeln($"Tipo de Serviço: {nomeDoServico}  \n");
+                builder.Writeln($"Nome da Equipe: {equipesSelecionadas[j].Codigo}");
+                builder.Writeln($"Cidade: {cidadeSelecionada.Nome}");
+                builder.Writeln($"Tipo de Serviço: {nomeDoServico}\n");
 
-                for (k = 0; k < rotaSelecionada.Count; k++)
+                for (k = 0; k < 5; k++)
                 {
                     var enderecoCompleto = $"{rotaSelecionada[k][indexEndereco]}, Numero {rotaSelecionada[k][indexNumero]} {rotaSelecionada[k][indexComplemento]} - {rotaSelecionada[k][indexBairro]}";
                     font.Bold = true;
                     font.Underline = Underline.Single;
                     font.Size = 9;
-                    builder.Writeln($"Contrato: {rotaSelecionada[k][indexContrato]} - Assinante: {rotaSelecionada[k][indexAssinante]}");
+                    builder.Write("Contrato:");
+                    font.Bold = false;
+                    builder.Write(rotaSelecionada[k][indexContrato]);
+                    font.Bold = true;
+                    builder.Write(" - Assinante:");
+                    font.Bold = false;
+                    builder.Writeln(rotaSelecionada[k][indexAssinante]);
 
                     font.Underline = Underline.None;
+                    font.Bold = true;
+                    builder.Write("Endereço:  ");
                     font.Bold = false;
-                    builder.Writeln($"Endereço:{enderecoCompleto} - CEP: {rotaSelecionada[k][indexCep]}");
-                    builder.Writeln($"O.S: {rotaSelecionada[k][indexOS]} ");
-                    builder.Writeln("\n\n\n");
+                    builder.Writeln(enderecoCompleto);
+
+                    font.Bold = true;
+                    builder.Write("CEP: ");
+                    font.Bold = false;
+                    builder.Writeln(rotaSelecionada[k][indexCep]);
+
+                    font.Bold = true;
+                    builder.Write("O.S.: ");
+                    font.Bold = false;
+                    builder.Writeln(rotaSelecionada[k][indexOS]);
+
+                    builder.Writeln("\n");
 
                 }
-                word.Save("GeradorRotas.docx");
             }
+            word.Save($"Rotas {cidadeSelecionada.Nome}.docx");
         }
     }
 }
